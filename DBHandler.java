@@ -106,57 +106,87 @@ public class DBHandler {
 
     /**
      * Adds a household.
-     *
-     * @param attributesGoHere Placeholder.
      */
-    public void addHousehold(String attributesGoHere) {
-        sendCommand(attributesGoHere);
+    public void addHousehold(String userID, String address, boolean isWaterEnough,
+                             boolean isWaterClean, String username, String password,
+                             String location) {
+        sendCommand(String.format("INSERT INTO UserHousehold VALUES" +
+                "(%s, %s, %s, %s, %s, %s, %s)", userID, address, isWaterEnough,
+                isWaterClean, username, password, location));
     }
 
     /**
-     * Adds a busines.
-     *
-     * @param attributesGoHere Placeholder.
+     * Adds a business.
      */
-    public void addBusiness(String attributesGoHere) {
-        sendCommand(attributesGoHere);
+    public void addBusiness(String userID, String address, boolean isWaterEnough,
+                            boolean isWaterClean, String username, String password,
+                            String location) {
+        sendCommand(String.format("INSERT INTO UserBusiness VALUES" +
+                        "(%s, %s, %s, %s, %s, %s, %s)", userID, address, isWaterEnough,
+                isWaterClean, username, password, location));
     }
 
     /**
-     * Adds a license.
-     *
-     * @param attributesGoHere Placeholder.
+     * Adds a license. Date format is yyyy-mm-dd.
      */
-    public void addLicense(String attributesGoHere) {
-        sendCommand(attributesGoHere);
+    public void addLicense(String licenseID, String expiryDate,
+                           String dateAuthorized, String userID,
+                           boolean isSurface) {
+        if (isSurface) {
+            sendCommand(String.format("INSERT INTO SurfaceWaterLicense VALUES" +
+                            "(%s, %s, %s, %s)", licenseID, expiryDate, dateAuthorized,
+                    userID));
+        } else {
+            sendCommand(String.format("INSERT INTO GroundWaterLicense VALUES" +
+                            "(%s, %s, %s, %s)", licenseID, expiryDate, dateAuthorized,
+                    userID));
+        }
+    }
+
+    /**
+     * Adds a business.
+     */
+    public void addBodyOfWater(String waterID, String name, String type,
+                               boolean isSurface) {
+        sendCommand(String.format("INSERT INTO BodyOfWater VALUES" +
+                "(%s, %s, %s)", waterID, name, type));
+        if (isSurface) {
+            sendCommand(String.format("INSERT INTO SurfaceWater VALUES" +
+                            "(%s)", waterID));
+        } else {
+            sendCommand(String.format("INSERT INTO GroundWater VALUES" +
+                    "(%s)", waterID));
+        }
     }
 
     /**
      * Deletes a household.
-     *
-     * @param attributesGoHere Placeholder.
      */
-    public void deleteHousehold(String attributesGoHere) {
-        sendCommand(attributesGoHere);
+    public void deleteHousehold(String userID) {
+        sendCommand(String.format("DELETE FROM UserHousehold WHERE userID = %s",
+                                    userID));
     }
 
     /**
      * Deletes a business.
-     *
-     * @param attributesGoHere Placeholder.
      */
-    public void deleteBusiness(String attributesGoHere) {
-        sendCommand(attributesGoHere);
+    public void deleteBusiness(String userID) {
+        sendCommand(String.format("DELETE FROM UserBusiness WHERE userID = %s",
+                                    userID));
     }
 
     /**
      * Updates the address of a household or a business.
-     *
-     * @param attributesGoHere Placeholder.
-     * @param isHousehold Specifies if a household's address is to be updated.
      */
-    public void updateAddress(String attributesGoHere, boolean isHousehold) {
-        sendCommand(attributesGoHere);
+    public void updateAddress(String userID, String address,
+                              boolean isHousehold) {
+        if (isHousehold) {
+            sendCommand(String.format("UPDATE UserHousehold SET address = %s " +
+                    "WHERE userID = %s", address, userID));
+        } else {
+            sendCommand(String.format("UPDATE UserBusiness SET address = %s " +
+                    "WHERE userID = %s", address, userID));
+        }
     }
 
     /**
@@ -165,35 +195,30 @@ public class DBHandler {
      * @param attributesGoHere Placeholder.
      * @return Aforementioned list.
      */
-    public ArrayList<StringBuilder> usersInLocation(String attributesGoHere) {
-        return sendCommand(attributesGoHere);
+    public ArrayList<StringBuilder> usersInLocation(String location) {
+        return sendCommand(String.format("SELECT userID FROM UserHousehold WHERE location = %s " +
+                "UNION SELECT userID FROM UserBusiness WHERE location = %s", location, location));
     }
 
     /**
-     * Returns list of users with either not enough or dirty water.
-     *
-     * @param attributesGoHere Placeholder.
-     * @return Aforementioned list.
+     * Returns list of users with the specified water quality.
      */
-    public ArrayList<StringBuilder> usersWithBadWater(String attributesGoHere) {
-        return sendCommand(attributesGoHere);
+    public ArrayList<StringBuilder> usersWithWaterQuality(boolean isWaterEnough, boolean isWaterClean) {
+        return sendCommand(String.format("SELECT userID FROM UserHousehold WHERE isWaterEnough = %s AND isWaterClean = %s " +
+                "UNION SELECT userID FROM UserBusiness WHERE isWaterEnough = %s AND isWaterClean = %s",
+                isWaterEnough, isWaterClean, isWaterEnough, isWaterClean));
     }
 
     /**
      * Returns list of users and their report on water quality.
-     *
-     * @param attributesGoHere Placeholder.
-     * @return Aforementioned list.
      */
-    public ArrayList<StringBuilder> waterQualityInfo(String attributesGoHere) {
-        return sendCommand(attributesGoHere);
+    public ArrayList<StringBuilder> waterQualityInfo() {
+        return sendCommand("SELECT userID, isWaterEnough, isWaterClean FROM UserHousehold " +
+                        "UNION SELECT userID, isWaterEnough, isWaterClean FROM Business");
     }
 
     /**
      * Returns licenses and water sources they draw from.
-     *
-     * @param attributesGoHere Placeholder.
-     * @return Aforementioned list.
      */
     public ArrayList<StringBuilder> licenseSource(String attributesGoHere) {
         return sendCommand(attributesGoHere);
