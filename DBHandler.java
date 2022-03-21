@@ -192,35 +192,90 @@ public class DBHandler {
     /**
      * Returns list of users in a location.
      */
-    public ArrayList<StringBuilder> usersInLocation(String location) {
+    /*public ArrayList<StringBuilder> usersInLocation(String location) {
         return sendCommand(String.format("SELECT userID FROM UserHousehold WHERE location = %s " +
                 "UNION SELECT userID FROM UserBusiness WHERE location = %s", location, location));
-    }
+    }*/
 
     /**
      * Returns list of users with the specified water quality.
      */
-    public ArrayList<StringBuilder> usersWithWaterQuality(boolean isWaterEnough, boolean isWaterClean) {
+    /*public ArrayList<StringBuilder> usersWithWaterQuality(boolean isWaterEnough, boolean isWaterClean) {
         return sendCommand(String.format("SELECT userID FROM UserHousehold WHERE isWaterEnough = %s AND isWaterClean = %s " +
                 "UNION SELECT userID FROM UserBusiness WHERE isWaterEnough = %s AND isWaterClean = %s",
                 isWaterEnough, isWaterClean, isWaterEnough, isWaterClean));
+    }*/
+
+    /**
+     * Returns tuples with user-specified fields from a particular table satisfying one condition.
+     */
+    public ArrayList<StringBuilder> select(String fields, String table, String condition) {
+        return sendCommand(String.format("SELECT %s FROM %s WHERE %s", fields, table, condition));
     }
 
     /**
      * Returns list of users and a particular field.
      */
-    public ArrayList<StringBuilder> showUserInfo(String field, String table) {
-        return sendCommand(String.format("SELECT userID, %s FROM %table", field, table));
+    public ArrayList<StringBuilder> project(String fields, String table) {
+        return sendCommand(String.format("SELECT %s FROM %table", fields, table));
     }
 
     /**
      * Returns licenses and water sources they draw from.
      */
-    public ArrayList<StringBuilder> licenseSource(String attributesGoHere) {
+   /* public ArrayList<StringBuilder> licenseSource(String attributesGoHere) {
         return sendCommand("SELECT licenseID, waterID, name FROM UserBusiness U, GroundWaterLicense GWL, DrawsGround DG, SurfaceWaterLicense SWL, DrawsSurface DS" +
                 " WHERE U.userID = GWL.userID AND  GWL.licenseID = DG.licenseID AND BOW.waterID = DG.waterID AND SWL.licenseID = DS.licenseID AND BOW.waterID = DS.waterID");
-    }
+    }*/
 
+    /**
+     *
+     */
+    public ArrayList<StringBuilder> join(String table1, String table2) {
+        try {
+            DatabaseMetaData d = connection.getMetaData();
+            ResultSet foreignKeys = d.getImportedKeys(null,null,table1);
+            ResultSet primaryKey = d.getPrimaryKeys(null,null,table2);
+
+            String currentForeignKey = null;
+            primaryKey.next();
+            String currentPrimaryKey = primaryKey.getString("COLUMN_NAME");
+
+            while (foreignKeys.next()) {
+                if (currentPrimaryKey == foreignKeys.getString("FK_NAME")) {
+                    currentForeignKey = foreignKeys.getString("FK_NAME");
+                    break;
+                }
+            }
+
+            if (currentForeignKey != null) {
+                return sendCommand(String.format("SELECT * FROM %s, %s WHERE " +
+                        "%s.%s = %s.%s", table1, table2, table1, currentForeignKey,
+                        table2, currentPrimaryKey));
+            } else {
+                foreignKeys = d.getImportedKeys(null,null,table2);
+                primaryKey = d.getPrimaryKeys(null,null,table1);
+
+                currentForeignKey = null;
+                primaryKey.next();
+                currentPrimaryKey = primaryKey.getString("COLUMN_NAME");
+
+                while (foreignKeys.next()) {
+                    if (currentPrimaryKey == foreignKeys.getString("FK_NAME")) {
+                        currentForeignKey = foreignKeys.getString("FK_NAME");
+                        break;
+                    }
+                }
+
+                return sendCommand(String.format("SELECT * FROM %s, %s WHERE " +
+                                "%s.%s = %s.%s", table1, table2, table2, currentForeignKey,
+                        table1, currentPrimaryKey));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
     /**
      * Returns number of users with unclean or not enough water.
