@@ -191,9 +191,6 @@ public class DBHandler {
 
     /**
      * Returns list of users in a location.
-     *
-     * @param attributesGoHere Placeholder.
-     * @return Aforementioned list.
      */
     public ArrayList<StringBuilder> usersInLocation(String location) {
         return sendCommand(String.format("SELECT userID FROM UserHousehold WHERE location = %s " +
@@ -210,28 +207,27 @@ public class DBHandler {
     }
 
     /**
-     * Returns list of users and their report on water quality.
+     * Returns list of users and a particular field.
      */
-    public ArrayList<StringBuilder> waterQualityInfo() {
-        return sendCommand("SELECT userID, isWaterEnough, isWaterClean FROM UserHousehold " +
-                        "UNION SELECT userID, isWaterEnough, isWaterClean FROM Business");
+    public ArrayList<StringBuilder> showUserInfo(String field, String table) {
+        return sendCommand(String.format("SELECT userID, %s FROM %table", field, table));
     }
 
     /**
      * Returns licenses and water sources they draw from.
      */
     public ArrayList<StringBuilder> licenseSource(String attributesGoHere) {
-        return sendCommand(attributesGoHere);
+        return sendCommand("SELECT licenseID, waterID, name FROM UserBusiness U, GroundWaterLicense GWL, DrawsGround DG, SurfaceWaterLicense SWL, DrawsSurface DS" +
+                " WHERE U.userID = GWL.userID AND  GWL.licenseID = DG.licenseID AND BOW.waterID = DG.waterID AND SWL.licenseID = DS.licenseID AND BOW.waterID = DS.waterID");
     }
+
 
     /**
      * Returns number of users with unclean or not enough water.
-     *
-     * @param attributesGoHere Placeholder.
      * @return Aforementioned list.
      */
-    public ArrayList<StringBuilder> numUsersWithBadWater(String attributesGoHere) {
-        return sendCommand(attributesGoHere);
+    public ArrayList<StringBuilder> numUsersWithBadWater() {
+        return sendCommand("SELECT COUNT(userID) FROM UserBusiness WHERE isWaterEnough = False AND isWaterClean = False");
     }
 
     /**
@@ -241,17 +237,51 @@ public class DBHandler {
      * @return Aforementioned list.
      */
     public ArrayList<StringBuilder> stressedWaterSource(String attributesGoHere) {
-        return sendCommand(attributesGoHere);
+        return sendCommand("WITH Temp AS " +
+                "    SELECT GW.waterID as waterID, COUNT(distinct U.userID) as numUser " +
+                "    FROM UserBusiness U, GroundWaterLicense GL, DrawsGround DG, GroundWater GW " +
+                "    Where U.userID = GL.userID " +
+                "          AND  GL.waterID = DG.waterID " +
+                "          AND   GW.waterID = DG.waterID " +
+                "    GROUP BY GW.waterID " +
+                "SELECT waterID " +
+                "FROM Temp " +
+                "WHERE numUser = (SELECT MAX(numUser) From Temp)");
     }
 
     /**
      * Returns the user that holds all licenses drawing from a water source.
-     *
-     * @param attributesGoHere Placeholder.
-     * @return Aforementioned list.
      */
-    public ArrayList<StringBuilder> monoUser(String attributesGoHere) {
-        return sendCommand(attributesGoHere);
+    public ArrayList<StringBuilder> monoUser(String waterID, String dateAuthorized,
+                                             boolean isSurface) {
+        if (isSurface)
+            return sendCommand(String.format("SELECT userID " +
+                "FROM UserBusiness U " +
+                "WHERE NOT EXISTS ( " +
+                "    (SELECT licenseID " +
+                "    FROM GroundWaterLicense GL, DrawsGround D " +
+                "    WHERE GL.licenseID = D.licenseID " +
+                "AND D.waterID = %s " +
+                "AND GL.dateAuthorized = %s) " +
+                "    EXCEPT " +
+                "    (SELECT licenseID " +
+                "    FROM GroundWaterLicense GL " +
+                "    WHERE U.userID = GL.userID) " +
+                ")", waterID, dateAuthorized));
+        else
+            return sendCommand(String.format("SELECT userID " +
+                    "FROM UserBusiness U " +
+                    "WHERE NOT EXISTS ( " +
+                    "    (SELECT licenseID " +
+                    "    FROM SurfaceWaterLicense SL, DrawsSurface D " +
+                    "    WHERE SL.licenseID = D.licenseID " +
+                    "AND D.waterID = %s " +
+                    "AND SL.dateAuthorized = %s) " +
+                    "    EXCEPT " +
+                    "    (SELECT licenseID " +
+                    "    FROM SurfaceWaterLicense GL " +
+                    "    WHERE U.userID = SL.userID) " +
+                    ")", waterID, dateAuthorized));
     }
 
     /**
@@ -261,6 +291,19 @@ public class DBHandler {
      * @return Aforementioned list.
      */
     public ArrayList<StringBuilder> problemPlant(String attributesGoHere) {
-        return sendCommand(attributesGoHere);
+        return sendCommand("SELECT plantID " +
+                "FROM SewagePlant SP " +
+                "WHERE NOT EXISTS( " +
+                "    (SELECT location " +
+                "    FROM UserBusiness U, SewagePlantHandles S " +
+                "    WHERE U.location = S.location " +
+                "AND U.isWaterClean = False " +
+                "GROUP BY location " +
+                "HAVING COUNT(userID) >= 1) " +
+                "    EXCEPT " +
+                "    (SELECT location " +
+                "    FROM SewagePlantHandles SPH " +
+                "    WHERE SP.plantID = SPH.plantID) " +
+                ")");
     }
 }
