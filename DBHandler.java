@@ -223,14 +223,34 @@ public class DBHandler {
     /**
      * Returns licenses and water sources they draw from.
      */
-   /* public ArrayList<StringBuilder> licenseSource(String attributesGoHere) {
-        return sendCommand("SELECT licenseID, waterID, name FROM UserBusiness U, GroundWaterLicense GWL, DrawsGround DG, SurfaceWaterLicense SWL, DrawsSurface DS" +
-                " WHERE U.userID = GWL.userID AND  GWL.licenseID = DG.licenseID AND BOW.waterID = DG.waterID AND SWL.licenseID = DS.licenseID AND BOW.waterID = DS.waterID");
-    }*/
+    public ArrayList<StringBuilder> licenseSource() {
+        return sendCommand("SELECT userID, licenseID, waterID, name FROM UserBusiness U, GroundWaterLicense GWL, DrawsGround DG, BodyOfWater BOW" +
+                " WHERE U.userID = GWL.userID AND  GWL.licenseID = DG.licenseID AND BOW.waterID = DG.waterID" +
+                " UNION SELECT userID, licenseID, waterID, name FROM UserBusiness U, SurfaceWaterLicense SWL, DrawsSurface DS, BodyOfWater BOW" +
+                " WHERE U.userID = SWL.userID AND SWL.licenseID = DS.licenseID AND BOW.waterID = DS.waterID");
+    }
 
     /**
-     *
+     * Returns a list of names of dams and names of rivers upstream and downstream to each dam
      */
+    public ArrayList<StringBuilder> damInfo() {
+        return sendCommand("SELECT D.name, B1.name AS upstreamName, B2.name AS downstreamName FROM Dams D, BodyOfWater B1, BodyOfWater B2" +
+                " WHERE D.upstream = B1.waterID AND D.downstream = B2.waterID");
+    }
+
+    /**
+     * Returns all measurements made by stations measuring a particular water source.
+     */
+    public ArrayList<StringBuilder> sourceMeasurements(String waterID) {
+        return sendCommand("SELECT B.name, S.stationID, SM.variable, SM.time, SM.Value, VU.unit "+
+                "FROM BodyOfWater B, Stations S, StationMeasurements SM, VariableUnits VU "+
+                "WHERE B.waterID = S.waterID AND S.stationID = SM.stationID AND SM.variable = VU.variable AND B.waterID = " + waterID);
+    }
+
+    /**
+     * Generic join method.
+     */
+    @Deprecated
     public ArrayList<StringBuilder> join(String table1, String table2) {
         try {
             DatabaseMetaData d = connection.getMetaData();
