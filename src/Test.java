@@ -11,9 +11,7 @@ public class Test {
             System.exit(0);
         }
 
-        for (StringBuilder s: dbh.problemPlant()) {
-            System.out.println(s);
-        }
+        System.out.println(dbh.monoUser("5642","2020-12-20",false).asString());
 
         dbh.close();
     }

@@ -56,11 +56,13 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/.idea/CPSC304Project.iml" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -108,7 +110,9 @@
       <option name="presentableId" value="Default" />
       <updated>1647973197480</updated>
       <workItem from="1647973203373" duration="368000" />
-      <workItem from="1647973830463" duration="263000" />
+      <workItem from="1647973830463" duration="379000" />
+      <workItem from="1647974233254" duration="1611000" />
+      <workItem from="1647975875716" duration="32000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;Fix merge conflicts.&quot;">
       <created>1647973323669</created>
@@ -144,7 +148,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="harmonizer" />
+                        <option value="handlerAndModels" />
                       </list>
                     </value>
                   </entry>
