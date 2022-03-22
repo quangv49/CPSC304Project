@@ -2,7 +2,7 @@ package src;
 
 public class Main {
     public static void main(String args[]) {
-        DatabaseConnectionHandler dbhandler = new DatabaseConnectionHandler();
+        DBHandler dbhandler = new DBHandler();
     }
 }
 
