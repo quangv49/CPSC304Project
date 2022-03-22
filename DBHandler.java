@@ -82,14 +82,16 @@ public class DBHandler {
                 int numCol = meta.getColumnCount();
                 StringBuilder temp = new StringBuilder();
 
-                for (int i = 0; i <= numCol; i++) {
-                    temp.append(String.format("%-20s", meta.getColumnLabel(i)));
+                for (int i = 1; i <= numCol; i++) {
+                    temp.append(String.format("%-50s", meta.getColumnLabel(i)));
                 }
+
+                result.add(temp);
 
                 while (set.next()) {
                     temp = new StringBuilder();
-                    for (int i = 0; i <= numCol; i++) {
-                        temp.append(String.format("%-20s", set.getString(meta.getColumnLabel(i))));
+                    for (int i = 1; i <= numCol; i++) {
+                        temp.append(String.format("%-50s", set.getString(meta.getColumnLabel(i))));
                     }
                     result.add(temp);
                 }
@@ -107,23 +109,18 @@ public class DBHandler {
     /**
      * Adds a household.
      */
-    public void addHousehold(String userID, String address, boolean isWaterEnough,
+    public void addUser(String userID, String address, boolean isWaterEnough,
                              boolean isWaterClean, String username, String password,
-                             String location) {
-        sendCommand(String.format("INSERT INTO UserHousehold VALUES" +
-                "(%s, %s, %s, %s, %s, %s, %s)", userID, address, isWaterEnough,
-                isWaterClean, username, password, location));
-    }
-
-    /**
-     * Adds a business.
-     */
-    public void addBusiness(String userID, String address, boolean isWaterEnough,
-                            boolean isWaterClean, String username, String password,
-                            String location) {
-        sendCommand(String.format("INSERT INTO UserBusiness VALUES" +
-                        "(%s, %s, %s, %s, %s, %s, %s)", userID, address, isWaterEnough,
-                isWaterClean, username, password, location));
+                             String location, boolean isHousehold) {
+        if (isHousehold) {
+            sendCommand(String.format("INSERT INTO UserHousehold VALUES" +
+                            "(\'%s\' , \'%s\' , \'%s\' , \'%s\' , \'%s\' , \'%s\' , \'%s\')", userID, address, isWaterEnough ? "T" : "F",
+                    isWaterClean ? "T" : "F", username, password, location));
+        } else {
+            sendCommand(String.format("INSERT INTO UserBusiness VALUES" +
+                            "(\'%s\' , \'%s\' , \'%s\' , \'%s\' , \'%s\' , \'%s\' , \'%s\')", userID, address, isWaterEnough ? "T" : "F",
+                    isWaterClean ? "T" : "F", username, password, location));
+        }
     }
 
     /**
@@ -134,45 +131,40 @@ public class DBHandler {
                            boolean isSurface) {
         if (isSurface) {
             sendCommand(String.format("INSERT INTO SurfaceWaterLicense VALUES" +
-                            "(%s, %s, %s, %s)", licenseID, expiryDate, dateAuthorized,
+                            "(\'%s\', \'%s\', \'%s\', \'%s\')", licenseID, expiryDate, dateAuthorized,
                     userID));
         } else {
             sendCommand(String.format("INSERT INTO GroundWaterLicense VALUES" +
-                            "(%s, %s, %s, %s)", licenseID, expiryDate, dateAuthorized,
+                            "(\'%s\', \'%s\', \'%s\', \'%s\')", licenseID, expiryDate, dateAuthorized,
                     userID));
         }
     }
 
     /**
-     * Adds a business.
+     * Adds a body of water.
      */
     public void addBodyOfWater(String waterID, String name, String type,
                                boolean isSurface) {
         sendCommand(String.format("INSERT INTO BodyOfWater VALUES" +
-                "(%s, %s, %s)", waterID, name, type));
+                "(\'%s\', \'%s\', \'%s\')", waterID, name, type));
         if (isSurface) {
             sendCommand(String.format("INSERT INTO SurfaceWater VALUES" +
-                            "(%s)", waterID));
+                            "(\'%s\')", waterID));
         } else {
             sendCommand(String.format("INSERT INTO GroundWater VALUES" +
-                    "(%s)", waterID));
+                    "(\'%s\')", waterID));
         }
     }
 
     /**
      * Deletes a household.
      */
-    public void deleteHousehold(String userID) {
-        sendCommand(String.format("DELETE FROM UserHousehold WHERE userID = %s",
+    public void deleteUser(String userID, boolean isHousehold) {
+        if (isHousehold)
+            sendCommand(String.format("DELETE FROM UserHousehold WHERE userID = \'%s\'",
                                     userID));
-    }
-
-    /**
-     * Deletes a business.
-     */
-    public void deleteBusiness(String userID) {
-        sendCommand(String.format("DELETE FROM UserBusiness WHERE userID = %s",
-                                    userID));
+        else sendCommand(String.format("DELETE FROM UserBusiness WHERE userID = \'%s\'",
+                userID));
     }
 
     /**
@@ -181,11 +173,11 @@ public class DBHandler {
     public void updateAddress(String userID, String address,
                               boolean isHousehold) {
         if (isHousehold) {
-            sendCommand(String.format("UPDATE UserHousehold SET address = %s " +
-                    "WHERE userID = %s", address, userID));
+            sendCommand(String.format("UPDATE UserHousehold SET address = \'%s\' " +
+                    "WHERE userID = \'%s\'", address, userID));
         } else {
-            sendCommand(String.format("UPDATE UserBusiness SET address = %s " +
-                    "WHERE userID = %s", address, userID));
+            sendCommand(String.format("UPDATE UserBusiness SET address = \'%s\' " +
+                    "WHERE userID = \'%s\'", address, userID));
         }
     }
 
@@ -217,16 +209,18 @@ public class DBHandler {
      * Returns list of users and a particular field.
      */
     public ArrayList<StringBuilder> project(String fields, String table) {
-        return sendCommand(String.format("SELECT %s FROM %table", fields, table));
+        return sendCommand(String.format("SELECT %s FROM %s", fields, table));
     }
 
     /**
      * Returns licenses and water sources they draw from.
      */
     public ArrayList<StringBuilder> licenseSource() {
-        return sendCommand("SELECT userID, licenseID, waterID, name FROM UserBusiness U, GroundWaterLicense GWL, DrawsGround DG, BodyOfWater BOW" +
+        return sendCommand("SELECT U.userID, GWL.licenseID AS licenseID, BOW.waterID AS waterID, BOW.name AS name" +
+                " FROM UserBusiness U, GroundWaterLicense GWL, DrawsGround DG, BodyOfWater BOW" +
                 " WHERE U.userID = GWL.userID AND  GWL.licenseID = DG.licenseID AND BOW.waterID = DG.waterID" +
-                " UNION SELECT userID, licenseID, waterID, name FROM UserBusiness U, SurfaceWaterLicense SWL, DrawsSurface DS, BodyOfWater BOW" +
+                " UNION SELECT U.userID, SWL.licenseID AS licenseID, BOW.waterID AS waterID, BOW.name AS name"+
+                " FROM UserBusiness U, SurfaceWaterLicense SWL, DrawsSurface DS, BodyOfWater BOW" +
                 " WHERE U.userID = SWL.userID AND SWL.licenseID = DS.licenseID AND BOW.waterID = DS.waterID");
     }
 
@@ -244,7 +238,7 @@ public class DBHandler {
     public ArrayList<StringBuilder> sourceMeasurements(String waterID) {
         return sendCommand("SELECT B.name, S.stationID, SM.variable, SM.time, SM.Value, VU.unit "+
                 "FROM BodyOfWater B, Stations S, StationMeasurements SM, VariableUnits VU "+
-                "WHERE B.waterID = S.waterID AND S.stationID = SM.stationID AND SM.variable = VU.variable AND B.waterID = " + waterID);
+                "WHERE B.waterID = S.measures AND S.stationID = SM.stationID AND SM.variable = VU.variable AND B.waterID = " + waterID);
     }
 
     /**
@@ -302,23 +296,20 @@ public class DBHandler {
      * @return Aforementioned list.
      */
     public ArrayList<StringBuilder> numUsersWithBadWater() {
-        return sendCommand("SELECT COUNT(userID) FROM UserBusiness WHERE isWaterEnough = False AND isWaterClean = False");
+        return sendCommand("SELECT COUNT(userID) FROM UserBusiness WHERE isWaterEnough = \'F\' AND isWaterClean = \'F\'");
     }
 
     /**
      * Returns water source that is used by the highest number of businesses.
-     *
-     * @param attributesGoHere Placeholder.
-     * @return Aforementioned list.
      */
-    public ArrayList<StringBuilder> stressedWaterSource(String attributesGoHere) {
+    public ArrayList<StringBuilder> stressedWaterSource() {
         return sendCommand("WITH Temp AS " +
-                "    SELECT GW.waterID as waterID, COUNT(distinct U.userID) as numUser " +
-                "    FROM UserBusiness U, GroundWaterLicense GL, DrawsGround DG, GroundWater GW " +
-                "    Where U.userID = GL.userID " +
-                "          AND  GL.waterID = DG.waterID " +
-                "          AND   GW.waterID = DG.waterID " +
-                "    GROUP BY GW.waterID " +
+                "(SELECT GW.waterID as waterID, COUNT(distinct U.userID) as numUser " +
+                "FROM UserBusiness U, GroundWaterLicense GL, DrawsGround DG, GroundWater GW " +
+                "WHERE U.userID = GL.userID " +
+                "AND GL.licenseID = DG.licenseID " +
+                "AND GW.waterID = DG.waterID " +
+                "GROUP BY GW.waterID) " +
                 "SELECT waterID " +
                 "FROM Temp " +
                 "WHERE numUser = (SELECT MAX(numUser) From Temp)");
@@ -329,56 +320,53 @@ public class DBHandler {
      */
     public ArrayList<StringBuilder> monoUser(String waterID, String dateAuthorized,
                                              boolean isSurface) {
-        if (isSurface)
+        if (!isSurface)
             return sendCommand(String.format("SELECT userID " +
                 "FROM UserBusiness U " +
-                "WHERE NOT EXISTS ( " +
-                "    (SELECT licenseID " +
-                "    FROM GroundWaterLicense GL, DrawsGround D " +
-                "    WHERE GL.licenseID = D.licenseID " +
-                "AND D.waterID = %s " +
-                "AND GL.dateAuthorized = %s) " +
-                "    EXCEPT " +
-                "    (SELECT licenseID " +
-                "    FROM GroundWaterLicense GL " +
-                "    WHERE U.userID = GL.userID) " +
+                "WHERE NOT EXISTS (" +
+                "(SELECT GL.licenseID " +
+                "FROM GroundWaterLicense GL, DrawsGround D " +
+                "WHERE GL.licenseID = D.licenseID " +
+                "AND D.waterID = \'%s\' " +
+                "AND GL.dateAuthorized = \'%s\') " +
+                "MINUS " +
+                "(SELECT GL2.licenseID " +
+                "FROM GroundWaterLicense GL2 " +
+                "WHERE U.userID = GL2.userID)" +
                 ")", waterID, dateAuthorized));
         else
             return sendCommand(String.format("SELECT userID " +
                     "FROM UserBusiness U " +
-                    "WHERE NOT EXISTS ( " +
-                    "    (SELECT licenseID " +
-                    "    FROM SurfaceWaterLicense SL, DrawsSurface D " +
-                    "    WHERE SL.licenseID = D.licenseID " +
-                    "AND D.waterID = %s " +
-                    "AND SL.dateAuthorized = %s) " +
-                    "    EXCEPT " +
-                    "    (SELECT licenseID " +
-                    "    FROM SurfaceWaterLicense GL " +
-                    "    WHERE U.userID = SL.userID) " +
+                    "WHERE NOT EXISTS (" +
+                    "(SELECT SL.licenseID " +
+                    "FROM SurfaceWaterLicense SL, DrawsSurface D " +
+                    "WHERE SL.licenseID = D.licenseID " +
+                    "AND D.waterID = \'%s\' " +
+                    "AND SL.dateAuthorized = \'%s\') " +
+                    "MINUS " +
+                    "(SELECT SL2.licenseID " +
+                    "FROM SurfaceWaterLicense SL2 " +
+                    "WHERE U.userID = SL2.userID)" +
                     ")", waterID, dateAuthorized));
     }
 
     /**
      * Returns sewage plants that handle all locations with at least one user with bad water.
-     *
-     * @param attributesGoHere Placeholder.
      * @return Aforementioned list.
      */
-    public ArrayList<StringBuilder> problemPlant(String attributesGoHere) {
+    public ArrayList<StringBuilder> problemPlant() {
         return sendCommand("SELECT plantID " +
                 "FROM SewagePlant SP " +
                 "WHERE NOT EXISTS( " +
-                "    (SELECT location " +
-                "    FROM UserBusiness U, SewagePlantHandles S " +
-                "    WHERE U.location = S.location " +
-                "AND U.isWaterClean = False " +
+                "(SELECT location " +
+                "FROM UserBusiness " +
+                "WHERE isWaterClean = 'F' " +
                 "GROUP BY location " +
                 "HAVING COUNT(userID) >= 1) " +
-                "    EXCEPT " +
-                "    (SELECT location " +
-                "    FROM SewagePlantHandles SPH " +
-                "    WHERE SP.plantID = SPH.plantID) " +
+                "MINUS " +
+                "(SELECT location " +
+                "FROM SewagePlantHandles SPH " +
+                "WHERE SP.plantID = SPH.plantID) " +
                 ")");
     }
 }
