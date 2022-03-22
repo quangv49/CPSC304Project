@@ -4,13 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="ef33bf78-03a2-4f1e-9107-cf8d3995faef" name="Changes" comment="&quot;Fix merge conflicts.&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+=======
+    <list default="true" id="ef33bf78-03a2-4f1e-9107-cf8d3995faef" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/ButtonAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/ButtonAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/ComboBoxAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/ComboBoxAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/SimplePanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/SimplePanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/TabbedPane.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/TabbedPane.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/UI.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/UI.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UI.java" afterDir="false" />
+>>>>>>> dd2664c4db5146c308804c2115b6ebf070b7a6d3
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -18,7 +38,11 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectId" id="26kgqczfDKy9lNFKK27JahUcx0S" />
+=======
+  <component name="ProjectId" id="26ivp0K1Nes7AmroHS6456W0xgi" />
+>>>>>>> dd2664c4db5146c308804c2115b6ebf070b7a6d3
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -27,6 +51,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+<<<<<<< HEAD
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -45,6 +70,28 @@
   <component name="RunManager">
     <configuration name="Test" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="src.Test" />
+=======
+    <property name="DatabaseDriversLRU" value="oracle" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Phuong\Desktop\School\CPSC304\CPSC304Project" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="src.Main" />
+>>>>>>> dd2664c4db5146c308804c2115b6ebf070b7a6d3
       <module name="CPSC304Project" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -55,6 +102,7 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="ef33bf78-03a2-4f1e-9107-cf8d3995faef" name="Changes" comment="" />
+<<<<<<< HEAD
       <created>1647973197480</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -70,6 +118,16 @@
       <updated>1647973323669</updated>
     </task>
     <option name="localTasksCounter" value="2" />
+=======
+      <created>1647919400455</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1647919400455</updated>
+      <workItem from="1647919403311" duration="10388000" />
+      <workItem from="1647979328013" duration="504000" />
+      <workItem from="1647984908650" duration="3295000" />
+    </task>
+>>>>>>> dd2664c4db5146c308804c2115b6ebf070b7a6d3
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
