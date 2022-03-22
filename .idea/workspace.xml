@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ef33bf78-03a2-4f1e-9107-cf8d3995faef" name="Changes" comment="&quot;Fix merge conflicts.&quot;">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/DBHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/DBHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DBHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Test.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +63,8 @@
       <updated>1647973197480</updated>
       <workItem from="1647973203373" duration="368000" />
       <workItem from="1647973830463" duration="379000" />
-      <workItem from="1647974233254" duration="1540000" />
+      <workItem from="1647974233254" duration="1611000" />
+      <workItem from="1647975875716" duration="32000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;Fix merge conflicts.&quot;">
       <created>1647973323669</created>
