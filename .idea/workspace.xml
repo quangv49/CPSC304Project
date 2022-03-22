@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ef33bf78-03a2-4f1e-9107-cf8d3995faef" name="Changes" comment="&quot;Fix merge conflicts.&quot;">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/DBHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/DBHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DBHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Test.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,11 +37,13 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/.idea/CPSC304Project.iml" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -60,7 +68,8 @@
       <option name="presentableId" value="Default" />
       <updated>1647973197480</updated>
       <workItem from="1647973203373" duration="368000" />
-      <workItem from="1647973830463" duration="263000" />
+      <workItem from="1647973830463" duration="379000" />
+      <workItem from="1647974233254" duration="1540000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;Fix merge conflicts.&quot;">
       <created>1647973323669</created>
@@ -86,7 +95,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="harmonizer" />
+                        <option value="handlerAndModels" />
                       </list>
                     </value>
                   </entry>

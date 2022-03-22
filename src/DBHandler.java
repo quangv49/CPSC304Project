@@ -65,37 +65,43 @@ public class DBHandler {
      * Generic function which sends a SQL command and returns the result as an ArrayList<String>.
      *
      * @param command Processed SQL statement as a string (String.format() is expected).
-     * @return Null if there is an error or the SQL statement doesn't return anything, or an ArrayList<StringBuilder>
+     * @return Null if there is an error or the SQL statement doesn't return anything, or an QueryResult
      * if the statement is a query.
      */
-    public ArrayList<StringBuilder> sendCommand(String command) {
+    public QueryResult sendCommand(String command) {
         try {
-            Statement s = connection.createStatement();
+            // Setup
+            Statement s = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             if (command.contains("INSERT") || command.contains("DELETE") || command.contains("UPDATE")) {
                 s.executeUpdate(command);
                 connection.commit();
                 s.close();
                 return null;
             } else {
+                // Get query result and metadata
                 ResultSet set = s.executeQuery(command);
                 ResultSetMetaData meta = set.getMetaData();
-                ArrayList<StringBuilder> result = new ArrayList<>();
 
+                // Obtain required indices
                 int numCol = meta.getColumnCount();
-                StringBuilder temp = new StringBuilder();
+                set.last();
+                int numTuples = set.getRow();
+                set.beforeFirst();
 
+
+                QueryResult result = new QueryResult(numCol,numTuples);
+
+                // Get column names
                 for (int i = 1; i <= numCol; i++) {
-                    temp.append(String.format("%-50s", meta.getColumnLabel(i)));
+                    result.setColName(i, meta.getColumnLabel(i));
                 }
 
-                result.add(temp);
-
+                // Put tuple info in the right place
                 while (set.next()) {
-                    temp = new StringBuilder();
+                    int row = set.getRow();
                     for (int i = 1; i <= numCol; i++) {
-                        temp.append(String.format("%-50s", set.getString(meta.getColumnLabel(i))));
+                        result.setTupleEntry(row, i, set.getString(meta.getColumnLabel(i)));
                     }
-                    result.add(temp);
                 }
 
                 set.close();
@@ -186,7 +192,7 @@ public class DBHandler {
     /**
      * Returns list of users in a location.
      */
-    /*public ArrayList<StringBuilder> usersInLocation(String location) {
+    /*public QueryResult usersInLocation(String location) {
         return sendCommand(String.format("SELECT userID FROM UserHousehold WHERE location = %s " +
                 "UNION SELECT userID FROM UserBusiness WHERE location = %s", location, location));
     }*/
@@ -194,7 +200,7 @@ public class DBHandler {
     /**
      * Returns list of users with the specified water quality.
      */
-    /*public ArrayList<StringBuilder> usersWithWaterQuality(boolean isWaterEnough, boolean isWaterClean) {
+    /*public QueryResult usersWithWaterQuality(boolean isWaterEnough, boolean isWaterClean) {
         return sendCommand(String.format("SELECT userID FROM UserHousehold WHERE isWaterEnough = %s AND isWaterClean = %s " +
                 "UNION SELECT userID FROM UserBusiness WHERE isWaterEnough = %s AND isWaterClean = %s",
                 isWaterEnough, isWaterClean, isWaterEnough, isWaterClean));
@@ -202,22 +208,23 @@ public class DBHandler {
 
     /**
      * Returns tuples with user-specified fields from a particular table satisfying one condition.
+     * @return
      */
-    public ArrayList<StringBuilder> select(String fields, String table, String condition) {
+    public QueryResult select(String fields, String table, String condition) {
         return sendCommand(String.format("SELECT %s FROM %s WHERE %s", fields, table, condition));
     }
 
     /**
      * Returns list of users and a particular field.
      */
-    public ArrayList<StringBuilder> project(String fields, String table) {
+    public QueryResult project(String fields, String table) {
         return sendCommand(String.format("SELECT %s FROM %s", fields, table));
     }
 
     /**
      * Returns licenses and water sources they draw from.
      */
-    public ArrayList<StringBuilder> licenseSource() {
+    public QueryResult licenseSource() {
         return sendCommand("SELECT U.userID, GWL.licenseID AS licenseID, BOW.waterID AS waterID, BOW.name AS name" +
                 " FROM UserBusiness U, GroundWaterLicense GWL, DrawsGround DG, BodyOfWater BOW" +
                 " WHERE U.userID = GWL.userID AND  GWL.licenseID = DG.licenseID AND BOW.waterID = DG.waterID" +
@@ -229,7 +236,7 @@ public class DBHandler {
     /**
      * Returns a list of names of dams and names of rivers upstream and downstream to each dam
      */
-    public ArrayList<StringBuilder> damInfo() {
+    public QueryResult damInfo() {
         return sendCommand("SELECT D.name, B1.name AS upstreamName, B2.name AS downstreamName FROM Dams D, BodyOfWater B1, BodyOfWater B2" +
                 " WHERE D.upstream = B1.waterID AND D.downstream = B2.waterID");
     }
@@ -237,7 +244,7 @@ public class DBHandler {
     /**
      * Returns all measurements made by stations measuring a particular water source.
      */
-    public ArrayList<StringBuilder> sourceMeasurements(String waterID) {
+    public QueryResult sourceMeasurements(String waterID) {
         return sendCommand("SELECT B.name, S.stationID, SM.variable, SM.time, SM.Value, VU.unit "+
                 "FROM BodyOfWater B, Stations S, StationMeasurements SM, VariableUnits VU "+
                 "WHERE B.waterID = S.measures AND S.stationID = SM.stationID AND SM.variable = VU.variable AND B.waterID = " + waterID);
@@ -247,7 +254,7 @@ public class DBHandler {
      * Generic join method.
      */
     @Deprecated
-    public ArrayList<StringBuilder> join(String table1, String table2) {
+    public QueryResult join(String table1, String table2) {
         try {
             DatabaseMetaData d = connection.getMetaData();
             ResultSet foreignKeys = d.getImportedKeys(null,null,table1);
@@ -297,14 +304,14 @@ public class DBHandler {
      * Returns number of users with unclean or not enough water.
      * @return Aforementioned list.
      */
-    public ArrayList<StringBuilder> numUsersWithBadWater() {
+    public QueryResult numUsersWithBadWater() {
         return sendCommand("SELECT COUNT(userID) FROM UserBusiness WHERE isWaterEnough = \'F\' AND isWaterClean = \'F\'");
     }
 
     /**
      * Returns water source that is used by the highest number of businesses.
      */
-    public ArrayList<StringBuilder> stressedWaterSource() {
+    public QueryResult stressedWaterSource() {
         return sendCommand("WITH Temp AS " +
                 "(SELECT GW.waterID as waterID, COUNT(distinct U.userID) as numUser " +
                 "FROM UserBusiness U, GroundWaterLicense GL, DrawsGround DG, GroundWater GW " +
@@ -320,7 +327,7 @@ public class DBHandler {
     /**
      * Returns the user that holds all licenses drawing from a water source.
      */
-    public ArrayList<StringBuilder> monoUser(String waterID, String dateAuthorized,
+    public QueryResult monoUser(String waterID, String dateAuthorized,
                                              boolean isSurface) {
         if (!isSurface)
             return sendCommand(String.format("SELECT userID " +
@@ -356,7 +363,7 @@ public class DBHandler {
      * Returns sewage plants that handle all locations with at least one user with bad water.
      * @return Aforementioned list.
      */
-    public ArrayList<StringBuilder> problemPlant() {
+    public QueryResult problemPlant() {
         return sendCommand("SELECT plantID " +
                 "FROM SewagePlant SP " +
                 "WHERE NOT EXISTS( " +
@@ -371,4 +378,45 @@ public class DBHandler {
                 "WHERE SP.plantID = SPH.plantID) " +
                 ")");
     }
+}
+
+class QueryResult {
+    private Object[] colNames;
+    private Object[][] tuples;
+
+    public QueryResult(int colNum, int tupleNum) {
+        colNames = new Object[colNum];
+        tuples = new Object[tupleNum][colNum];
+    }
+
+    public void setColName(int idx, String name) {
+        colNames[idx-1] = name;
+    }
+
+    public void setTupleEntry(int tupleIdx, int colIdx, String name) {
+        tuples[tupleIdx - 1][colIdx - 1] = name;
+    }
+
+    public Object[] getColNames() {return colNames;}
+
+    public Object[][] getTuples() {return tuples;}
+
+    public StringBuilder asString() {
+        StringBuilder temp = new StringBuilder();
+        int numCol = colNames.length;
+        int numTuples = tuples.length;
+
+        for (int i = 1; i <= numCol; i++) {
+            temp.append(String.format("%-50s", colNames[i-1]));
+            if (i == numCol) temp.append("\n");
+        }
+
+        for (int i = 1; i <= numTuples; i++) {
+            for (int j = 1; j <= numCol; j++) {
+                temp.append(String.format("%-50s", tuples[i-1][j-1]));
+                if (j == numCol) temp.append("\n");
+            }
+        }
+
+        return temp;}
 }
