@@ -5,47 +5,80 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ef33bf78-03a2-4f1e-9107-cf8d3995faef" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/85e3bc3a-ae16-4824-a6b9-2d079adc7948.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/85e3bc3a-ae16-4824-a6b9-2d079adc7948/storage_v2/_src_/schema/SYS.rUIBAA.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/85e3bc3a-ae16-4824-a6b9-2d079adc7948/storage_v2/_src_/schema/SYSTEM.L2avkg.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/java/java.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/CPSC304Project.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/libraries/resources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/sshConfigs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/resources/ojdbc8.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/DatabaseConnectionHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/Main.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DatabaseConnectionHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/UI" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/85e3bc3a-ae16-4824-a6b9-2d079adc7948.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/85e3bc3a-ae16-4824-a6b9-2d079adc7948.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/DatabaseConnectionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DBHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="26ivp0K1Nes7AmroHS6456W0xgi" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="oracle" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="src.Main" />
+      <module name="CPSC304Project" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ef33bf78-03a2-4f1e-9107-cf8d3995faef" name="Changes" comment="" />
+      <created>1647919400455</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1647919400455</updated>
+      <workItem from="1647919403311" duration="10161000" />
+    </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
