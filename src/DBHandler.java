@@ -378,4 +378,13 @@ public class DBHandler {
                 "WHERE SP.plantID = SPH.plantID) " +
                 ")");
     }
+
+    public DatabaseMetaData getMetadata() {
+        try {
+            return connection.getMetaData();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }
