@@ -114,6 +114,11 @@ public class DBHandler {
         }
     }
 
+    public void addTuple(Object relationChoice){
+        if ("UserBusiness".equals(relationChoice)) {//                addUser();
+        }
+    }
+
     /**
      * Adds a household.
      */
