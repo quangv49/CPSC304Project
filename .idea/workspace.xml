@@ -4,15 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ef33bf78-03a2-4f1e-9107-cf8d3995faef" name="Changes" comment="">
+    <list default="true" id="ef33bf78-03a2-4f1e-9107-cf8d3995faef" name="Changes" comment="&quot;Fix merge conflicts.&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/DBHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/DBHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/QueryResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/QueryResult.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/UI.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPSC304Project/src/ui/UI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DBHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +55,14 @@
       <recent name="C:\Users\Phuong\Desktop\School\CPSC304\CPSC304Project" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="src.Main" />
+      <module name="CPSC304Project" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Test" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="src.Test" />
       <module name="CPSC304Project" />
@@ -66,6 +70,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Test" />
+      <item itemvalue="Application.Main" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -78,6 +86,8 @@
       <workItem from="1647919403311" duration="10388000" />
       <workItem from="1647979328013" duration="504000" />
       <workItem from="1647984908650" duration="3295000" />
+      <workItem from="1647990436957" duration="2172000" />
+      <workItem from="1648085345714" duration="2715000" />
     </task>
     <servers />
   </component>
@@ -110,5 +120,16 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="&quot;Fix merge conflicts.&quot;" />
     <option name="LAST_COMMIT_MESSAGE" value="&quot;Fix merge conflicts.&quot;" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/ui/UI.java</url>
+          <line>210</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

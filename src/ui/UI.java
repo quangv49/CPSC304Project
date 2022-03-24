@@ -1,6 +1,7 @@
 package src.ui;
 
 import src.DBHandler;
+import src.QueryResult;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +28,8 @@ public class UI extends JFrame implements ActionListener {
         pack();
         setVisible(true);
         setResizable(true);
+        repaint();
+        revalidate();
     }
 
     public static void main(String[] args) { new UI(); }
@@ -44,10 +47,12 @@ class OnePanel extends JPanel{
 
     public OnePanel(String action, String[] relationOptions){
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        OptionPanel simplePanel = new OptionPanel(action, relationOptions); // change this to relations once we get the relations
+        ResultTablePanel resultTable = new ResultTablePanel(new QueryResult(new String[] {"Select a query up top!"},
+                new Object[][] {{"Your choices are limited though"}}));
+        OptionPanel simplePanel = new OptionPanel(action, relationOptions, resultTable); // change this to relations once we get the relations
         add(simplePanel);
         // sample data for JTable
-        String[] columnNames = {"First Name",
+/*        String[] columnNames = {"First Name",
                 "Last Name",
                 "Sport",
                 "# of Years",
@@ -64,9 +69,9 @@ class OnePanel extends JPanel{
                         "Speed reading", new Integer(20), new Boolean(true)},
                 {"Joe", "Brown",
                         "Pool", new Integer(10), new Boolean(false)}
-        };
-        ResultTablePanel resultTable = new ResultTablePanel(columnNames, data);
+        };*/
         add(resultTable);
+        revalidate();
     }
 }
 
@@ -77,7 +82,7 @@ class OptionPanel extends JPanel{
 
     private String[] relation_options = {"UserBusiness", "UserHousehold", "BodyOfWater"};
 
-    public OptionPanel(String action, String[] relations){
+    public OptionPanel(String action, String[] relations, ResultTablePanel resultDisplay){
         relationComboBox = new JComboBox<>(relations);
         fieldComboBox = new JComboBox<>();
         relationComboBox.setBounds(80, 50, 140, 20);
@@ -88,7 +93,7 @@ class OptionPanel extends JPanel{
         setLayout(new GridLayout(1, 3));
 
         submit = new JButton(action); // action = select, project, join, etc
-        submit.addActionListener(new ButtonAction(submit));
+        submit.addActionListener(new ButtonAction(submit, resultDisplay));
 
         setLayout(new FlowLayout());
         // the 5 elements in one row
@@ -100,11 +105,27 @@ class OptionPanel extends JPanel{
     }
 }
 
-class ResultTablePanel extends JPanel {
-    public ResultTablePanel(String[] columns, Object[][] tableData){
-        super(new GridLayout(1,0));
+class TableResult {
+    public String[] columnNames;
+    public Object[][] data;
 
-        final JTable table = new JTable(tableData, columns);
+    public TableResult(String[] columns, Object[][] myData){
+        this.columnNames = columns;
+        this.data = myData;
+    }
+
+    public void setResult(String[] columns, Object[][] myData){
+        this.columnNames = columns;
+        this.data = myData;
+    }
+}
+
+class ResultTablePanel extends JPanel {
+    private JTable table;
+
+    public ResultTablePanel(QueryResult myResult){
+        super(new GridLayout(1,0));
+        table = new JTable(myResult.getTuples(), myResult.getColNames());
         table.setPreferredScrollableViewportSize(new Dimension(500, 200));
         table.setFillsViewportHeight(true);
 
@@ -114,7 +135,23 @@ class ResultTablePanel extends JPanel {
         //Add the scroll pane to this panel.
         add(scrollPane);
     }
+
+    public void setQueryResult(QueryResult queryResult) {
+        this.table = new JTable(queryResult.getTuples(), queryResult.getColNames());
+
+        for (Component c: getComponents()) {
+            remove(c);
         }
+
+        repaint();
+        revalidate();
+
+        add(new JScrollPane(table));
+
+        repaint();
+        revalidate();
+    }
+}
 
 // field box and relation box go together
 class ComboBoxAction implements ActionListener{
@@ -135,23 +172,51 @@ class ComboBoxAction implements ActionListener{
     }
 }
 
+
 class ButtonAction implements ActionListener{
     private JButton button;
+    private ResultTablePanel resultDisplay;
 
-    public ButtonAction(JButton myButton){
+    public ButtonAction(JButton myButton, ResultTablePanel resultDisplay){
         this.button = myButton;
+        this.resultDisplay = resultDisplay;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+
+        String[] columnNames = {"First Name",
+                "Last Name",
+                "Sport",
+                "# of Years",
+                "Vegetarian"};
+
+        Object[][] data = {
+                {"Kathy", "Smith",
+                        "Snowboarding", new Integer(5), new Boolean(false)},
+                {"John", "Doe",
+                        "Rowing", new Integer(3), new Boolean(true)},
+                {"Sue", "Black",
+                        "Knitting", new Integer(2), new Boolean(false)},
+                {"Jane", "White",
+                        "Speed reading", new Integer(20), new Boolean(true)},
+                {"Joe", "Brown",
+                        "Pool", new Integer(10), new Boolean(false)}
+        };
+
         DBHandler dbHandler = new DBHandler();
         switch(e.getActionCommand()){ // add more cases for each button action
             case "select":
                 System.out.println("pressed select");
+                resultDisplay.setQueryResult(new QueryResult(columnNames, data));
+                break;
                 //dbHandler.select("", "", ""); uncomment/modity to dbHandler method
             case "project":
                 System.out.println("pressed project");
+                break;
         }
+        resultDisplay.repaint();
     }
 }
 
