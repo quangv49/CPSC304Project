@@ -7,7 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.DatabaseMetaData;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UI extends JFrame implements ActionListener {
 
@@ -52,29 +54,24 @@ class OnePanel extends JPanel{
                 new Object[][] {{"Your choices are limited though"}}));
         OptionPanel simplePanel = new OptionPanel(action, relationOptions, resultTable, dbh); // change this to relations once we get the relations
         add(simplePanel);
-        // sample data for JTable
-/*        String[] columnNames = {"First Name",
-                "Last Name",
-                "Sport",
-                "# of Years",
-                "Vegetarian"};
-
-        Object[][] data = {
-                {"Kathy", "Smith",
-                        "Snowboarding", new Integer(5), new Boolean(false)},
-                {"John", "Doe",
-                        "Rowing", new Integer(3), new Boolean(true)},
-                {"Sue", "Black",
-                        "Knitting", new Integer(2), new Boolean(false)},
-                {"Jane", "White",
-                        "Speed reading", new Integer(20), new Boolean(true)},
-                {"Joe", "Brown",
-                        "Pool", new Integer(10), new Boolean(false)}
-        };*/
         add(resultTable);
         revalidate();
     }
 }
+
+class OnePanelNew extends JPanel{
+
+    public OnePanelNew(JPanel optionPanel){
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        ResultTablePanel resultTable = new ResultTablePanel(new QueryResult(new String[] {"Select a query up top!"},
+                new Object[][] {{"Your choices are limited though"}}));
+        add(optionPanel);
+        add(resultTable);
+        revalidate();
+    }
+}
+
+
 
 class OptionPanel extends JPanel{
     JButton submit;
@@ -105,20 +102,9 @@ class OptionPanel extends JPanel{
         add(fieldComboBox);
         add(submit);
     }
-}
 
-class TableResult {
-    public String[] columnNames;
-    public Object[][] data;
-
-    public TableResult(String[] columns, Object[][] myData){
-        this.columnNames = columns;
-        this.data = myData;
-    }
-
-    public void setResult(String[] columns, Object[][] myData){
-        this.columnNames = columns;
-        this.data = myData;
+    public JComboBox<String> getRelationComboBox() {
+        return this.relationComboBox;
     }
 }
 
@@ -225,24 +211,28 @@ class ButtonAction implements ActionListener {
                 resultDisplay.setQueryResult(result);
                 System.out.println("pressed project");
                 break;
+            case "add_tuple":
+                Object userChoice = relationComboBox.getSelectedItem();
+                // call dbhandler on the userchoice
+
+
         }
         resultDisplay.repaint();
     }
 }
 
 class TabbedPane extends JPanel{
-    private String[] relation_options = {"UserBusiness", "UserHousehold", "BodyOfWater"}; // this would change per pane
 
     public TabbedPane(DBHandler dbh) {
         super(new GridLayout(1, 1));
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        // SimplePanel simplePanel = new SimplePanel("project", relation_options); // change this to relations once we get the relations
-        OnePanel panel1 = new OnePanel("project", relation_options, dbh);
-        tabbedPane.addTab("Tab 1",panel1);
+        String[] insertTabRelations = new String[]{"UserBusiness", "UserHousehold", "BodyOfWater", "GroundWaterLicense", "SurfaceWaterLicense"};
+        InsertPanel panel1 = new InsertPanel(insertTabRelations, dbh);
+        tabbedPane.addTab("Add Tuples",panel1);
 
-        OnePanel panel2 = new OnePanel("select", new String[]{"BodyOfWater", "SewagePlant"}, dbh); // add more tabs like this
-        tabbedPane.addTab("Tab 2", panel2);
+//        OnePanel panel2 = new OnePanel("select", new String[]{"BodyOfWater", "SewagePlant"}); // add more tabs like this
+//        tabbedPane.addTab("Tab 2", panel2);
 
         //Add the tabbed pane to this panel.
         add(tabbedPane, BorderLayout.CENTER);

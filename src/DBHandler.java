@@ -114,6 +114,11 @@ public class DBHandler {
         }
     }
 
+    public void addTuple(Object relationChoice){
+        if ("UserBusiness".equals(relationChoice)) {//                addUser();
+        }
+    }
+
     /**
      * Adds a household.
      */
@@ -382,6 +387,16 @@ public class DBHandler {
     public DatabaseMetaData getMetadata() {
         try {
             return connection.getMetaData();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ResultSetMetaData getRelationInfo(String relation) {
+        try {
+            Statement s = connection.createStatement();
+            return s.executeQuery("SELECT * FROM " + relation).getMetaData();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
