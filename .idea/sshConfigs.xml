@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SshConfigs">
-    <configs>
-      <sshConfig authType="PASSWORD" host="remote.students.cs.ubc.ca" id="d37b409c-5e7d-40e3-97f8-67b91a1701ba" localPort="1522" port="22" nameFormat="DESCRIPTIVE" username="pnguyen6" useOpenSSHConfig="true" />
-    </configs>
-  </component>
-</project>
