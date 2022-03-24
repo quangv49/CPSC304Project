@@ -93,7 +93,7 @@ class OptionPanel extends JPanel{
         setLayout(new GridLayout(1, 3));
 
         submit = new JButton(action); // action = select, project, join, etc
-        submit.addActionListener(new ButtonAction(submit, resultDisplay));
+        submit.addActionListener(new ButtonAction(submit, resultDisplay, relationComboBox));
 
         setLayout(new FlowLayout());
         // the 5 elements in one row
@@ -103,20 +103,9 @@ class OptionPanel extends JPanel{
         add(fieldComboBox);
         add(submit);
     }
-}
 
-class TableResult {
-    public String[] columnNames;
-    public Object[][] data;
-
-    public TableResult(String[] columns, Object[][] myData){
-        this.columnNames = columns;
-        this.data = myData;
-    }
-
-    public void setResult(String[] columns, Object[][] myData){
-        this.columnNames = columns;
-        this.data = myData;
+    public JComboBox<String> getRelationComboBox() {
+        return this.relationComboBox;
     }
 }
 
@@ -176,10 +165,12 @@ class ComboBoxAction implements ActionListener{
 class ButtonAction implements ActionListener{
     private JButton button;
     private ResultTablePanel resultDisplay;
+    private OptionPanel optionPanel;
 
-    public ButtonAction(JButton myButton, ResultTablePanel resultDisplay){
+    public ButtonAction(JButton myButton, ResultTablePanel resultDisplay, OptionPanel option){
         this.button = myButton;
         this.resultDisplay = resultDisplay;
+        this.optionPanel = option;
     }
 
     @Override
@@ -204,7 +195,6 @@ class ButtonAction implements ActionListener{
                 {"Joe", "Brown",
                         "Pool", new Integer(10), new Boolean(false)}
         };
-
         DBHandler dbHandler = new DBHandler();
         switch(e.getActionCommand()){ // add more cases for each button action
             case "select":
