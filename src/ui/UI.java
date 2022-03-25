@@ -22,7 +22,7 @@ public class UI extends JFrame implements ActionListener {
         super("WaterQualityDatabaseManagement");
     }
 
-    public void showFrame(DBHandler dbHandler) {
+    public void showFrame() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // setPreferredSize(new Dimension(1500, 1000));
         add(new TabbedPane(dbHandler), BorderLayout.CENTER);
@@ -230,9 +230,11 @@ class TabbedPane extends JPanel{
         String[] insertTabRelations = new String[]{"UserBusiness", "UserHousehold", "BodyOfWater", "GroundWaterLicense", "SurfaceWaterLicense"};
         InsertPanel panel1 = new InsertPanel(insertTabRelations, dbh);
         tabbedPane.addTab("Add Tuples",panel1);
+        System.out.println("addedTabbedPane");
 
-//        OnePanel panel2 = new OnePanel("select", new String[]{"BodyOfWater", "SewagePlant"}); // add more tabs like this
-//        tabbedPane.addTab("Tab 2", panel2);
+        SelectProjectPanel panel2 = new SelectProjectPanel(new String[]{"UserBusiness", "UserHousehold", "BodyOfWater", "GroundWaterLicense", "SurfaceWaterLicense",
+                "BodyOfWater", "SewagePlant"}); // add more tabs like this
+        tabbedPane.addTab("Select/Project", panel2);
 
         //Add the tabbed pane to this panel.
         add(tabbedPane, BorderLayout.CENTER);
