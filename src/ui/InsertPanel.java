@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.sql.DatabaseMetaData;
 
 public class InsertPanel extends JPanel {
     JButton submit;
@@ -110,14 +109,30 @@ class InsertComboBoxAction implements ActionListener {
 
             switch (currentOp) {
                 case "Insert":
+                    StringBuilder columnPart = new StringBuilder();
+                    StringBuilder valuePart = new StringBuilder();
 
+                    for (int i = 0; i < currentFields.size(); i++) {
+                        if (i < currentFields.size() - 1) {
+                            columnPart.append(currentFields.get(i).getName() + ", ");
+                            if (i == 0) valuePart.append("('" + currentFields.get(i).getText() + "', ");
+                            else valuePart.append("'" + currentFields.get(i).getText() + "', ");
+                        }
+                        else {
+                            columnPart.append(currentFields.get(i).getName());
+                            valuePart.append("'" + currentFields.get(i).getText() + "')");
+                        }
+                    }
+
+                    dbh.sendCommand("INSERT INTO " + relation + " (" + columnPart + ") VALUES " + valuePart);
+                    break;
                 case "Delete":
                 case "Update":
             }
         /*
         TODO run dbhandler here to get the table - remember to read from the text fields
          */
-            myInsertPanel.getResultDisplay().setQueryResult(new QueryResult(columnNames, data));
+            myInsertPanel.getResultDisplay().setQueryResult(dbh.sendCommand("SELECT * FROM " + relation));
         } else {
              /*
         TODO run dbhandler here to get the fields
@@ -187,6 +202,7 @@ class InsertComboBoxAction implements ActionListener {
                         for (int i = 0; i < numColumns; i++) {
                             JLabel label = new JLabel(colNames[i]);
                             JTextField field = new JTextField();
+                            field.setName(currentRelationInfo.getColumnName(i+1));
                             optionFields.add(label);
                             optionFields.add(field);
                             currentFields.add(field);
@@ -206,6 +222,7 @@ class InsertComboBoxAction implements ActionListener {
                         optionFields.setLayout(new GridLayout(1, 2));
                         JLabel label = new JLabel("userID");
                         JTextField field = new JTextField();
+                        field.setName(currentRelationInfo.getColumnName(1));
                         optionFields.add(label);
                         optionFields.add(field);
                         currentFields.add(field);
@@ -223,12 +240,14 @@ class InsertComboBoxAction implements ActionListener {
                         optionFields.setLayout(new GridLayout(2, 2));
                         JLabel labelID = new JLabel("userID");
                         JTextField fieldID = new JTextField();
+                        fieldID.setName("USERID");
                         optionFields.add(labelID);
                         optionFields.add(fieldID);
                         currentFields.add(fieldID);
 
                         JLabel labelAddress = new JLabel("Address");
                         JTextField fieldAddress = new JTextField();
+                        fieldAddress.setName("ADDRESS");
                         optionFields.add(labelAddress);
                         optionFields.add(fieldAddress);
                         currentFields.add(fieldAddress);
