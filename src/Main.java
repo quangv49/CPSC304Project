@@ -7,7 +7,7 @@ public class Main {
         DBHandler dbhandler = new DBHandler();
         dbhandler.connect("ora_pnguyen6", "a14182869");
         UI ui = new UI();
-        ui.showFrame(dbhandler);
+        ui.showFrame();
     }
 }
 
