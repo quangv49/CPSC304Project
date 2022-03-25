@@ -233,7 +233,7 @@ class TabbedPane extends JPanel{
         System.out.println("addedTabbedPane");
 
         SelectProjectPanel panel2 = new SelectProjectPanel(new String[]{"UserBusiness", "UserHousehold", "BodyOfWater", "GroundWaterLicense", "SurfaceWaterLicense",
-                "BodyOfWater", "SewagePlant"}); // add more tabs like this
+                "BodyOfWater", "SewagePlant", "Dams"}, dbh); // add more tabs like this
         tabbedPane.addTab("Select/Project", panel2);
 
         //Add the tabbed pane to this panel.

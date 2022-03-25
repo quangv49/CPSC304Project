@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 
 class SelectProjectPanel extends JPanel {
     JButton submit;
@@ -15,10 +17,10 @@ class SelectProjectPanel extends JPanel {
     private JTextField condition;
     ResultTablePanel resultDisplay;
     private JPanel options;
+    private DBHandler dbh;
 
-
-
-    public SelectProjectPanel(String[] relations){
+    public SelectProjectPanel(String[] relations, DBHandler dbh){
+        this.dbh = dbh;
         options = new JPanel();
         options.setLayout(new GridLayout(1, 15));
         options.setPreferredSize(new Dimension(150, 30));
@@ -69,6 +71,12 @@ class SelectProjectPanel extends JPanel {
 
     public JPanel getOptions(){return this.options;};
 
+    public JTextField getCondition() {
+        return condition;
+    }
+
+    public DBHandler getHandler() {return dbh;}
+
 
 }
 
@@ -99,28 +107,39 @@ class SelectProjectAction implements ActionListener{
                 {"Joe", "Brown",
                         "Pool", new Integer(10), new Boolean(false)}
         };
-        switch(e.getActionCommand()){ // add more cases for each button action
-            case "comboBoxChanged":{
-                /*
-                TODO: replace relationfields with the column names of the selected relation from relationCombobox
-                 */
-                String[] relationFields = {"userID", "addres", "isWaterEnough", "isWaterClean", "username", "password", "location"}; // get all fields selectable by this relation
-                System.out.println(myPanel.getRelationComboBox().getSelectedItem());
-                myPanel.getChooseFields().setModel(new DefaultComboBoxModel(relationFields));
-                myPanel.getOptions().revalidate();
-                myPanel.getOptions().repaint();
-                break;
-            }
-            case "Submit":{
-                /*
-                TODO: get query result here
-                 */
-                myPanel.resultDisplay.setQueryResult(new QueryResult(columnNames, data));
-                System.out.println("pressed project");
-                break;
-            }
 
+        String relation = (String) myPanel.getRelationComboBox().getSelectedItem();
+        ResultSetMetaData meta = myPanel.getHandler().getRelationInfo(relation);
+        try {
+            switch (e.getActionCommand()) { // add more cases for each button action
+                case "comboBoxChanged": {
+                    int colNum = meta.getColumnCount();
+                    String[] relationFields = new String[colNum]; // get all fields selectable by this relation
+
+                    for (int i = 1; i <= colNum; i++) relationFields[i-1] = meta.getColumnName(i);
+
+                    myPanel.getChooseFields().setModel(new DefaultComboBoxModel(relationFields));
+                    myPanel.getOptions().revalidate();
+                    myPanel.getOptions().repaint();
+                    break;
+                }
+                case "Submit": {
+                    String condition = myPanel.getCondition().getText();
+
+                    if (condition.equals(""))
+                        myPanel.resultDisplay.setQueryResult(myPanel.getHandler().project((String) myPanel.getChooseFields().getSelectedItem(),
+                                (String) myPanel.getRelationComboBox().getSelectedItem()));
+                    else
+                        myPanel.resultDisplay.setQueryResult(myPanel.getHandler().select((String) myPanel.getChooseFields().getSelectedItem(),
+                                (String) myPanel.getRelationComboBox().getSelectedItem(), condition));
+
+                    break;
+                }
+
+            }
+            myPanel.repaint();
+        } catch (SQLException exc) {
+            System.out.println(exc.getMessage());
         }
-        myPanel.repaint();
     }
 }

@@ -87,22 +87,6 @@ class InsertComboBoxAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        String[] columnNames = {"First Name", "Last Name", "Sport", "# of Years", "Vegetarian"};
-
-        Object[][] data = {
-                {"Kathy", "Smith",
-                        "Snowboarding", new Integer(5), new Boolean(false)},
-                {"John", "Doe",
-                        "Rowing", new Integer(3), new Boolean(true)},
-                {"Sue", "Black",
-                        "Knitting", new Integer(2), new Boolean(false)},
-                {"Jane", "White",
-                        "Speed reading", new Integer(20), new Boolean(true)},
-                {"Joe", "Brown",
-                        "Pool", new Integer(10), new Boolean(false)}
-        };
-
-        System.out.println((String) myInsertPanel.relationComboBox.getSelectedItem());
         String relation = (String) myInsertPanel.relationComboBox.getSelectedItem();
         ResultSetMetaData currentRelationInfo = dbh.getRelationInfo(relation);
         System.out.println(e.getActionCommand()); // "comboBoxChanged" = action when comboxBox changed
@@ -146,7 +130,7 @@ class InsertComboBoxAction implements ActionListener {
             }
             myInsertPanel.getResultDisplay().setQueryResult(dbh.sendCommand("SELECT * FROM " + relation));
         } else {
-        
+
             try {
                 switch (e.getActionCommand()) {
                     case "comboBoxChanged": {
