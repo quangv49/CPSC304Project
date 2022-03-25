@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ class InsertComboBoxAction implements ActionListener {
     private DBHandler dbh;
     private ArrayList<JTextField> currentFields;
     private String currentOp;
+    private boolean surface = false;
 
     public InsertComboBoxAction(JPanel myComboBox, InsertPanel insertPanel, DBHandler dbh) {
         this.myInsertPanel = insertPanel;
@@ -125,18 +127,26 @@ class InsertComboBoxAction implements ActionListener {
                     }
 
                     dbh.sendCommand("INSERT INTO " + relation + " (" + columnPart + ") VALUES " + valuePart);
+
+                    if (relation == "BodyOfWater") {
+                        if (surface) dbh.sendCommand("INSERT INTO SurfaceWater VALUES (" + currentFields.get(0).getText() + ")");
+                        else dbh.sendCommand("INSERT INTO GroundWater VALUES (" + currentFields.get(0).getText() + ")");
+                    }
+
                     break;
                 case "Delete":
+                    dbh.sendCommand("DELETE FROM " + relation + " WHERE " + currentFields.get(0).getName() +
+                            " = '" + currentFields.get(0).getText() + "'");
+                    break;
                 case "Update":
+                    dbh.sendCommand("UPDATE " + relation +
+                            " SET " + currentFields.get(1).getName() + " = '" + currentFields.get(1).getText() + "' " +
+                            "WHERE " + currentFields.get(0).getName() + " = '" + currentFields.get(0).getText() + "'");
+                    break;
             }
-        /*
-        TODO run dbhandler here to get the table - remember to read from the text fields
-         */
             myInsertPanel.getResultDisplay().setQueryResult(dbh.sendCommand("SELECT * FROM " + relation));
         } else {
-             /*
-        TODO run dbhandler here to get the fields
-         */
+        
             try {
                 switch (e.getActionCommand()) {
                     case "comboBoxChanged": {
@@ -169,17 +179,25 @@ class InsertComboBoxAction implements ActionListener {
 
                         } else {
                             // if not user then only insert for BOW and License
-
+                            currentOp = "Insert";
+                            currentFields = new ArrayList<>();
                             /// code to dynamically make text fields
                             for (int i = 0; i < numColumns; i++) {
-                                currentOp = "Insert";
-                                currentFields = new ArrayList<>();
                                 JLabel label = new JLabel(colNames[i]);
                                 JTextField field = new JTextField();
                                 field.setName(currentRelationInfo.getColumnName(i+1));
                                 textFields.add(label);
                                 textFields.add(field);
                                 currentFields.add(field);
+                            }
+
+                            if (relation.equals("BodyOfWater")) {
+                                JCheckBox isSurface = new JCheckBox("Surface?");
+                                isSurface.addItemListener(check -> {
+                                    if (check.getItemSelectable() == isSurface) surface = true;
+                                    if (check.getStateChange() == ItemEvent.DESELECTED) surface = false;
+                                });
+                                textFields.add(isSurface);
                             }
                         }
                         myInsertPanel.setTextFieldPanel(textFields);
@@ -222,7 +240,7 @@ class InsertComboBoxAction implements ActionListener {
                         optionFields.setLayout(new GridLayout(1, 2));
                         JLabel label = new JLabel("userID");
                         JTextField field = new JTextField();
-                        field.setName(currentRelationInfo.getColumnName(1));
+                        field.setName("userID");
                         optionFields.add(label);
                         optionFields.add(field);
                         currentFields.add(field);

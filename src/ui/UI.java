@@ -22,7 +22,7 @@ public class UI extends JFrame implements ActionListener {
         super("WaterQualityDatabaseManagement");
     }
 
-    public void showFrame() {
+    public void showFrame(DBHandler dbHandler) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // setPreferredSize(new Dimension(1500, 1000));
         add(new TabbedPane(dbHandler), BorderLayout.CENTER);
