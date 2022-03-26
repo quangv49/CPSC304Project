@@ -86,13 +86,14 @@ class InsertComboBoxAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        // Obtain table name and ResultMetaData object to get num and names of columns
         String relation = (String) myInsertPanel.relationComboBox.getSelectedItem();
         ResultSetMetaData currentRelationInfo = dbh.getRelationInfo(relation);
-        System.out.println(e.getActionCommand()); // "comboBoxChanged" = action when comboxBox changed
+        // "comboBoxChanged" = action when comboxBox changed
         if (e.getActionCommand() == "Submit") {
             System.out.println("pressed insert");
 
+            // Mostly query construction. Implemented DML methods in DBHandler ended up being hard to use.
             switch (currentOp) {
                 case "Insert":
                     StringBuilder columnPart = new StringBuilder();
@@ -135,11 +136,12 @@ class InsertComboBoxAction implements ActionListener {
                 switch (e.getActionCommand()) {
                     case "comboBoxChanged": {
                         JPanel textFields = new JPanel();
-                        // int numColumns = use dbhandler to get number of columns
+                        // ResultMetaData used to get number of columns
                         int numColumns = currentRelationInfo.getColumnCount();
                         textFields.setLayout(new GridLayout(numColumns, 1));
 
-                        String[] colNames = new String[numColumns]; // replace with dbhandler to get colnames
+                        String[] colNames = new String[numColumns];
+                        // ResultMetaData used to get col names
                         for (int i = 1; i <= numColumns; i++) colNames[i - 1] = currentRelationInfo.getColumnName(i);
 
                         if (relation == "UserBusiness" || relation == "UserHousehold") {
@@ -165,7 +167,7 @@ class InsertComboBoxAction implements ActionListener {
                             // if not user then only insert for BOW and License
                             currentOp = "Insert";
                             currentFields = new ArrayList<>();
-                            /// code to dynamically make text fields
+                            /// Code to dynamically make text fields
                             for (int i = 0; i < numColumns; i++) {
                                 JLabel label = new JLabel(colNames[i]);
                                 JTextField field = new JTextField();
@@ -175,6 +177,7 @@ class InsertComboBoxAction implements ActionListener {
                                 currentFields.add(field);
                             }
 
+                            // BodyOfWater has subtypes Surface and Ground
                             if (relation.equals("BodyOfWater")) {
                                 JCheckBox isSurface = new JCheckBox("Surface?");
                                 isSurface.addItemListener(check -> {
