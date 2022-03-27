@@ -233,6 +233,15 @@ class TabbedPane extends JPanel{
                 "BodyOfWater", "SewagePlant", "Dams"}, dbh); // add more tabs like this
         tabbedPane.addTab("Select/Project", panel2);
 
+        DivisionPanel panel3 = new DivisionPanel(new String[]{"Fully-licensed users drawing from", "Sewage plant handling all locations with >1 user doesn't have clean water"}, dbh); // add more tabs like this
+        tabbedPane.addTab("Division", panel3);
+
+        AggregationPanel panel4 = new AggregationPanel(new String[]{"Number of users without enough clean water", "Most used body of water"}, dbh); // add more tabs like this
+        tabbedPane.addTab("Aggregation", panel4);
+
+        JoinPanel panel5 = new JoinPanel(new String[]{"River names upstream and downstream to each dam, and the dam names", "All Measurements by stations measuring water source: "}, dbh); // add more tabs like this
+        tabbedPane.addTab("Join", panel5);
+
         //Add the tabbed pane to this panel.
         add(tabbedPane, BorderLayout.CENTER);
 
