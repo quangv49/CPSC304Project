@@ -11,7 +11,7 @@ public class Test {
             System.exit(0);
         }
 
-        System.out.println(dbh.monoUser("5642","2020-12-20",false).asString());
+        System.out.println(dbh.monoUser("5642","2020-12-20").asString());
 
         dbh.close();
     }

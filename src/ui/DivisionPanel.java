@@ -19,9 +19,11 @@ public class DivisionPanel extends JPanel {
     private JLabel changingText1;
     private JLabel changingText2;
     private JLabel find;
+    DBHandler dbh;
 
     //Division: MonoUser, ProblemPlant
     public DivisionPanel(String[] relations, DBHandler dbh) {
+        this.dbh = dbh;
         options = new JPanel();
         options.setLayout(new GridLayout(1, 15));
         options.setPreferredSize(new Dimension(50, 30));
@@ -125,6 +127,10 @@ public class DivisionPanel extends JPanel {
         this.options.repaint();
     }
 
+    public JTextField getWaterIdField() {return waterIdField;}
+
+    public JTextField getDateAuthorizedField() {return dateAuthorizedField;}
+
 }
 
 class DivisionAction implements ActionListener{
@@ -136,26 +142,6 @@ class DivisionAction implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String[] columnNames = {"First Name",
-                "Last Name",
-                "Sport",
-                "# of Years",
-                "Vegetarian"};
-
-        Object[][] data = {
-                {"Kathy", "Smith",
-                        "Snowboarding", new Integer(5), new Boolean(false)},
-                {"John", "Doe",
-                        "Rowing", new Integer(3), new Boolean(true)},
-                {"Sue", "Black",
-                        "Knitting", new Integer(2), new Boolean(false)},
-                {"Jane", "White",
-                        "Speed reading", new Integer(20), new Boolean(true)},
-                {"Joe", "Brown",
-                        "Pool", new Integer(10), new Boolean(false)}
-        };
-
-        DBHandler dbHandler = new DBHandler();
         String relation = (String) myDivisionPanel.relationComboBox.getSelectedItem();
 
         switch(e.getActionCommand()){
@@ -185,9 +171,16 @@ class DivisionAction implements ActionListener{
             }
             case "Submit":{
                 // get query result
-
-                myDivisionPanel.resultDisplay.setQueryResult(new QueryResult(columnNames, data));
-                System.out.println("division: pressed Submit");
+                QueryResult result = null;
+                switch ((String) myDivisionPanel.relationComboBox.getSelectedItem()) {
+                    case "Fully-licensed users drawing from":
+                        result = myDivisionPanel.dbh.monoUser(myDivisionPanel.getWaterIdField().getText(),
+                                myDivisionPanel.getDateAuthorizedField().getText());
+                        break;
+                    case "Sewage plant handling all locations with >1 user doesn't have clean water":
+                        result = myDivisionPanel.dbh.problemPlant();
+                }
+                myDivisionPanel.resultDisplay.setQueryResult(result);
                 break;
             }
         }

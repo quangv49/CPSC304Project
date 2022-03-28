@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class UI extends JFrame implements ActionListener {
 
@@ -23,7 +25,30 @@ public class UI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // setPreferredSize(new Dimension(1500, 1000));
         add(new TabbedPane(dbHandler), BorderLayout.CENTER);
+        addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {}
 
+            @Override
+            public void windowClosing(WindowEvent e) {
+                dbHandler.close();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {}
+
+            @Override
+            public void windowIconified(WindowEvent e) {}
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+
+            @Override
+            public void windowActivated(WindowEvent e) {}
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
 
         pack();
         setVisible(true);
@@ -239,7 +264,7 @@ class TabbedPane extends JPanel{
         AggregationPanel panel4 = new AggregationPanel(new String[]{"Number of users without enough clean water", "Most used body of water"}, dbh); // add more tabs like this
         tabbedPane.addTab("Aggregation", panel4);
 
-        JoinPanel panel5 = new JoinPanel(new String[]{"River names upstream and downstream to each dam, and the dam names", "All Measurements by stations measuring water source: "}, dbh); // add more tabs like this
+        JoinPanel panel5 = new JoinPanel(new String[]{"River names upstream and downstream to each dam, and the dam names", "All Measurements by stations measuring water source: ", "Licenses and water sources"}, dbh); // add more tabs like this
         tabbedPane.addTab("Join", panel5);
 
         //Add the tabbed pane to this panel.

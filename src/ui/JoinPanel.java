@@ -16,9 +16,11 @@ public class JoinPanel extends JPanel {
     private JPanel options;
     private JLabel changingText1;
     private JLabel find;
+    DBHandler dbh;
 
     //damInfo, sourceMeasurements
     public JoinPanel(String[] relations, DBHandler dbh) {
+        this.dbh = dbh;
         options = new JPanel();
         options.setLayout(new GridLayout(1, 15));
         options.setPreferredSize(new Dimension(50, 30));
@@ -82,6 +84,8 @@ public class JoinPanel extends JPanel {
         this.options.repaint();
     }
 
+    public JTextField getWaterIdField() {return waterIdField;}
+
 }
 
 class JoinAction implements ActionListener{
@@ -129,6 +133,11 @@ class JoinAction implements ActionListener{
                     //sourceMeasurements: Return all measurements made by stations measuring a particular water source
                     myJoinPanel.setChangingText1("water ID: ");
                     myJoinPanel.addWaterIDField();
+                } else if (relation.equals("Licenses and water sources")) {
+                    //damInfo: Return a list of names of dams and names of rivers upstream and downstream to each dam
+                    myJoinPanel.removeChangingText();
+                    myJoinPanel.removeWaterIDField();
+
                 }
                 myJoinPanel.getOptions().revalidate();
                 myJoinPanel.getOptions().repaint();
@@ -137,7 +146,19 @@ class JoinAction implements ActionListener{
             }
             case "Submit":{
                 // get query result
-                myJoinPanel.resultDisplay.setQueryResult(new QueryResult(columnNames, data));
+                QueryResult result = null;
+                switch ((String) myJoinPanel.relationComboBox.getSelectedItem()) {
+                    case "River names upstream and downstream to each dam, and the dam names":
+                        result = myJoinPanel.dbh.damInfo();
+                        break;
+                    case "All Measurements by stations measuring water source: ":
+                        result = myJoinPanel.dbh.sourceMeasurements(myJoinPanel.getWaterIdField().getText());
+                        break;
+                    case "Licenses and water sources":
+                        result = myJoinPanel.dbh.licenseSource();
+                        break;
+                }
+                myJoinPanel.resultDisplay.setQueryResult(result);
                 System.out.println("join: pressed Submit");
                 break;
             }

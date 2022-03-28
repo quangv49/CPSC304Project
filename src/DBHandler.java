@@ -324,7 +324,7 @@ public class DBHandler {
                 "AND GL.licenseID = DG.licenseID " +
                 "AND GW.waterID = DG.waterID " +
                 "GROUP BY GW.waterID) " +
-                "SELECT waterID " +
+                "SELECT waterID, numUser " +
                 "FROM Temp " +
                 "WHERE numUser = (SELECT MAX(numUser) From Temp)");
     }
@@ -332,36 +332,51 @@ public class DBHandler {
     /**
      * Returns the user that holds all licenses drawing from a water source.
      */
-    public QueryResult monoUser(String waterID, String dateAuthorized,
-                                             boolean isSurface) {
-        if (!isSurface)
-            return sendCommand(String.format("SELECT userID " +
-                "FROM UserBusiness U " +
-                "WHERE NOT EXISTS (" +
-                "(SELECT GL.licenseID " +
-                "FROM GroundWaterLicense GL, DrawsGround D " +
-                "WHERE GL.licenseID = D.licenseID " +
-                "AND D.waterID = \'%s\' " +
-                "AND GL.dateAuthorized = \'%s\') " +
-                "MINUS " +
-                "(SELECT GL2.licenseID " +
-                "FROM GroundWaterLicense GL2 " +
-                "WHERE U.userID = GL2.userID)" +
-                ")", waterID, dateAuthorized));
-        else
-            return sendCommand(String.format("SELECT userID " +
-                    "FROM UserBusiness U " +
-                    "WHERE NOT EXISTS (" +
-                    "(SELECT SL.licenseID " +
-                    "FROM SurfaceWaterLicense SL, DrawsSurface D " +
-                    "WHERE SL.licenseID = D.licenseID " +
-                    "AND D.waterID = \'%s\' " +
-                    "AND SL.dateAuthorized = \'%s\') " +
-                    "MINUS " +
-                    "(SELECT SL2.licenseID " +
-                    "FROM SurfaceWaterLicense SL2 " +
-                    "WHERE U.userID = SL2.userID)" +
-                    ")", waterID, dateAuthorized));
+    public QueryResult monoUser(String waterID, String dateAuthorized) {
+        boolean isSurface = false;
+        try {
+            Statement temp = connection.createStatement();
+            ResultSet scan = temp.executeQuery("SELECT waterID FROM SURFACEWATER");
+            while (scan.next())
+                if (scan.getString("waterID").equals(waterID)) {
+                    isSurface = true;
+                    break;
+                }
+            scan.close();
+            temp.close();
+
+            if (!isSurface)
+                return sendCommand(String.format("SELECT userID " +
+                        "FROM UserBusiness U " +
+                        "WHERE NOT EXISTS (" +
+                        "(SELECT GL.licenseID " +
+                        "FROM GroundWaterLicense GL, DrawsGround D " +
+                        "WHERE GL.licenseID = D.licenseID " +
+                        "AND D.waterID = \'%s\' " +
+                        "AND GL.dateAuthorized = \'%s\') " +
+                        "MINUS " +
+                        "(SELECT GL2.licenseID " +
+                        "FROM GroundWaterLicense GL2 " +
+                        "WHERE U.userID = GL2.userID)" +
+                        ")", waterID, dateAuthorized));
+            else
+                return sendCommand(String.format("SELECT userID " +
+                        "FROM UserBusiness U " +
+                        "WHERE NOT EXISTS (" +
+                        "(SELECT SL.licenseID " +
+                        "FROM SurfaceWaterLicense SL, DrawsSurface D " +
+                        "WHERE SL.licenseID = D.licenseID " +
+                        "AND D.waterID = \'%s\' " +
+                        "AND SL.dateAuthorized = \'%s\') " +
+                        "MINUS " +
+                        "(SELECT SL2.licenseID " +
+                        "FROM SurfaceWaterLicense SL2 " +
+                        "WHERE U.userID = SL2.userID)" +
+                        ")", waterID, dateAuthorized));
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     /**
