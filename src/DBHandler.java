@@ -348,7 +348,13 @@ public class DBHandler {
             if (!isSurface)
                 return sendCommand(String.format("SELECT userID " +
                         "FROM UserBusiness U " +
-                        "WHERE NOT EXISTS (" +
+                        "WHERE EXISTS (" +
+                                "(SELECT GL.licenseID " +
+                                "FROM GroundWaterLicense GL, DrawsGround D " +
+                                "WHERE GL.licenseID = D.licenseID " +
+                                "AND D.waterID = \'%s\' " +
+                                "AND GL.dateAuthorized = \'%s\')) " +
+                        "AND NOT EXISTS (" +
                         "(SELECT GL.licenseID " +
                         "FROM GroundWaterLicense GL, DrawsGround D " +
                         "WHERE GL.licenseID = D.licenseID " +
@@ -358,11 +364,17 @@ public class DBHandler {
                         "(SELECT GL2.licenseID " +
                         "FROM GroundWaterLicense GL2 " +
                         "WHERE U.userID = GL2.userID)" +
-                        ")", waterID, dateAuthorized));
+                        ")", waterID, dateAuthorized, waterID, dateAuthorized));
             else
                 return sendCommand(String.format("SELECT userID " +
                         "FROM UserBusiness U " +
-                        "WHERE NOT EXISTS (" +
+                        "WHERE EXISTS (" +
+                        "(SELECT SL.licenseID " +
+                                "FROM SurfaceWaterLicense SL, DrawsSurface D " +
+                                "WHERE SL.licenseID = D.licenseID " +
+                                "AND D.waterID = \'%s\' " +
+                                "AND SL.dateAuthorized = \'%s\')) " +
+                        "AND NOT EXISTS (" +
                         "(SELECT SL.licenseID " +
                         "FROM SurfaceWaterLicense SL, DrawsSurface D " +
                         "WHERE SL.licenseID = D.licenseID " +
@@ -372,7 +384,7 @@ public class DBHandler {
                         "(SELECT SL2.licenseID " +
                         "FROM SurfaceWaterLicense SL2 " +
                         "WHERE U.userID = SL2.userID)" +
-                        ")", waterID, dateAuthorized));
+                        ")", waterID, dateAuthorized, waterID, dateAuthorized));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
