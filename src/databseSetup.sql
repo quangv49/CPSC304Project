@@ -61,7 +61,7 @@ insert into SurfaceWaterLicense values('F8H7P', '2023-01-17', '2020-01-17', 'baa
 insert into SurfaceWaterLicense values('G3H4E', '2022-08-02', '2019-08-02', 'baaab');
 insert into SurfaceWaterLicense values('H9J6L', '2022-05-05', '2019-05-05', 'baaac');
 insert into SurfaceWaterLicense values('I4B3M', '2024-07-01', '2021-07-01', 'baaad');
-insert into SurfaceWaterLicense values('J9H7G', '2024-04-02', '2021-04-02', 'baaae');
+insert into SurfaceWaterLicense values('J9H7G', '2024-04-02', '2019-05-05', 'baaac');
 
 CREATE TABLE BodyOfWater (waterID VARCHAR(50), name VARCHAR(50), type VARCHAR(50), PRIMARY KEY (waterID));
 
@@ -126,7 +126,7 @@ insert into SewagePlantHandles values('splant0001', 'Point Grey');
 insert into SewagePlantHandles values('splant0002', 'Yaletown');
 insert into SewagePlantHandles values('splant0003', 'Kerrisdale');
 insert into SewagePlantHandles values('splant0004', 'Kitsilano');
-insert into SewagePlantHandles values('splant0005', 'Dunbar');
+insert into SewagePlantHandles values('splant0003', 'Dunbar');
 
 
 

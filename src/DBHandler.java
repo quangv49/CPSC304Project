@@ -114,6 +114,11 @@ public class DBHandler {
         }
     }
 
+    public void addTuple(Object relationChoice){
+        if ("UserBusiness".equals(relationChoice)) {//                addUser();
+        }
+    }
+
     /**
      * Adds a household.
      */
@@ -319,7 +324,7 @@ public class DBHandler {
                 "AND GL.licenseID = DG.licenseID " +
                 "AND GW.waterID = DG.waterID " +
                 "GROUP BY GW.waterID) " +
-                "SELECT waterID " +
+                "SELECT waterID, numUser " +
                 "FROM Temp " +
                 "WHERE numUser = (SELECT MAX(numUser) From Temp)");
     }
@@ -327,36 +332,63 @@ public class DBHandler {
     /**
      * Returns the user that holds all licenses drawing from a water source.
      */
-    public QueryResult monoUser(String waterID, String dateAuthorized,
-                                             boolean isSurface) {
-        if (!isSurface)
-            return sendCommand(String.format("SELECT userID " +
-                "FROM UserBusiness U " +
-                "WHERE NOT EXISTS (" +
-                "(SELECT GL.licenseID " +
-                "FROM GroundWaterLicense GL, DrawsGround D " +
-                "WHERE GL.licenseID = D.licenseID " +
-                "AND D.waterID = \'%s\' " +
-                "AND GL.dateAuthorized = \'%s\') " +
-                "MINUS " +
-                "(SELECT GL2.licenseID " +
-                "FROM GroundWaterLicense GL2 " +
-                "WHERE U.userID = GL2.userID)" +
-                ")", waterID, dateAuthorized));
-        else
-            return sendCommand(String.format("SELECT userID " +
-                    "FROM UserBusiness U " +
-                    "WHERE NOT EXISTS (" +
-                    "(SELECT SL.licenseID " +
-                    "FROM SurfaceWaterLicense SL, DrawsSurface D " +
-                    "WHERE SL.licenseID = D.licenseID " +
-                    "AND D.waterID = \'%s\' " +
-                    "AND SL.dateAuthorized = \'%s\') " +
-                    "MINUS " +
-                    "(SELECT SL2.licenseID " +
-                    "FROM SurfaceWaterLicense SL2 " +
-                    "WHERE U.userID = SL2.userID)" +
-                    ")", waterID, dateAuthorized));
+    public QueryResult monoUser(String waterID, String dateAuthorized) {
+        boolean isSurface = false;
+        try {
+            Statement temp = connection.createStatement();
+            ResultSet scan = temp.executeQuery("SELECT waterID FROM SURFACEWATER");
+            while (scan.next())
+                if (scan.getString("waterID").equals(waterID)) {
+                    isSurface = true;
+                    break;
+                }
+            scan.close();
+            temp.close();
+
+            if (!isSurface)
+                return sendCommand(String.format("SELECT userID " +
+                        "FROM UserBusiness U " +
+                        "WHERE EXISTS (" +
+                                "(SELECT GL.licenseID " +
+                                "FROM GroundWaterLicense GL, DrawsGround D " +
+                                "WHERE GL.licenseID = D.licenseID " +
+                                "AND D.waterID = \'%s\' " +
+                                "AND GL.dateAuthorized = \'%s\')) " +
+                        "AND NOT EXISTS (" +
+                        "(SELECT GL.licenseID " +
+                        "FROM GroundWaterLicense GL, DrawsGround D " +
+                        "WHERE GL.licenseID = D.licenseID " +
+                        "AND D.waterID = \'%s\' " +
+                        "AND GL.dateAuthorized = \'%s\') " +
+                        "MINUS " +
+                        "(SELECT GL2.licenseID " +
+                        "FROM GroundWaterLicense GL2 " +
+                        "WHERE U.userID = GL2.userID)" +
+                        ")", waterID, dateAuthorized, waterID, dateAuthorized));
+            else
+                return sendCommand(String.format("SELECT userID " +
+                        "FROM UserBusiness U " +
+                        "WHERE EXISTS (" +
+                        "(SELECT SL.licenseID " +
+                                "FROM SurfaceWaterLicense SL, DrawsSurface D " +
+                                "WHERE SL.licenseID = D.licenseID " +
+                                "AND D.waterID = \'%s\' " +
+                                "AND SL.dateAuthorized = \'%s\')) " +
+                        "AND NOT EXISTS (" +
+                        "(SELECT SL.licenseID " +
+                        "FROM SurfaceWaterLicense SL, DrawsSurface D " +
+                        "WHERE SL.licenseID = D.licenseID " +
+                        "AND D.waterID = \'%s\' " +
+                        "AND SL.dateAuthorized = \'%s\') " +
+                        "MINUS " +
+                        "(SELECT SL2.licenseID " +
+                        "FROM SurfaceWaterLicense SL2 " +
+                        "WHERE U.userID = SL2.userID)" +
+                        ")", waterID, dateAuthorized, waterID, dateAuthorized));
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -378,45 +410,23 @@ public class DBHandler {
                 "WHERE SP.plantID = SPH.plantID) " +
                 ")");
     }
-}
 
-class QueryResult {
-    private Object[] colNames;
-    private Object[][] tuples;
-
-    public QueryResult(int colNum, int tupleNum) {
-        colNames = new Object[colNum];
-        tuples = new Object[tupleNum][colNum];
-    }
-
-    public void setColName(int idx, String name) {
-        colNames[idx-1] = name;
-    }
-
-    public void setTupleEntry(int tupleIdx, int colIdx, String name) {
-        tuples[tupleIdx - 1][colIdx - 1] = name;
-    }
-
-    public Object[] getColNames() {return colNames;}
-
-    public Object[][] getTuples() {return tuples;}
-
-    public StringBuilder asString() {
-        StringBuilder temp = new StringBuilder();
-        int numCol = colNames.length;
-        int numTuples = tuples.length;
-
-        for (int i = 1; i <= numCol; i++) {
-            temp.append(String.format("%-50s", colNames[i-1]));
-            if (i == numCol) temp.append("\n");
+    public DatabaseMetaData getMetadata() {
+        try {
+            return connection.getMetaData();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
         }
+    }
 
-        for (int i = 1; i <= numTuples; i++) {
-            for (int j = 1; j <= numCol; j++) {
-                temp.append(String.format("%-50s", tuples[i-1][j-1]));
-                if (j == numCol) temp.append("\n");
-            }
+    public ResultSetMetaData getRelationInfo(String relation) {
+        try {
+            Statement s = connection.createStatement();
+            return s.executeQuery("SELECT * FROM " + relation).getMetaData();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
         }
-
-        return temp;}
+    }
 }
