@@ -25,7 +25,7 @@ public class InsertPanel extends JPanel {
         relationComboBox = new JComboBox<>(relations);
         setLayout(new BorderLayout());
         textFieldPanel = new JPanel();
-        textFieldPanel.setLayout(new GridLayout(15,1));
+        textFieldPanel.setLayout(new GridLayout(5,1));
         optionPanel = new JPanel();
         this.resultDisplay = new ResultTablePanel(new QueryResult(new String[] {"Select a query up top!"},
                 new Object[][] {{"Your choices are limited though"}}));
@@ -43,7 +43,7 @@ public class InsertPanel extends JPanel {
         relationComboBox.addActionListener(actionListener);
 
         add(optionPanel, BorderLayout.PAGE_START);
-        add(textFieldPanel, BorderLayout.LINE_START);
+        add(textFieldPanel, BorderLayout.WEST);
         add(this.resultDisplay, BorderLayout.CENTER);
         revalidate();
         repaint();
@@ -53,6 +53,7 @@ public class InsertPanel extends JPanel {
         for (Component c: this.textFieldPanel.getComponents()) {
             this.textFieldPanel.remove(c);
         }
+        textFieldPanel.setPreferredSize(new Dimension(100,1000));
         this.textFieldPanel.add(textFieldPanel);
         this.textFieldPanel.revalidate();
         this.textFieldPanel.repaint();
@@ -138,7 +139,8 @@ class InsertComboBoxAction implements ActionListener {
                         JPanel textFields = new JPanel();
                         // ResultMetaData used to get number of columns
                         int numColumns = currentRelationInfo.getColumnCount();
-                        textFields.setLayout(new GridLayout(numColumns, 1));
+                        int numRows = (relation.equals("BodyOfWater"))?numColumns+1:numColumns;
+                        textFields.setLayout(new GridLayout(numRows, 1));
 
                         String[] colNames = new String[numColumns];
                         // ResultMetaData used to get col names
@@ -201,12 +203,13 @@ class InsertComboBoxAction implements ActionListener {
                         String[] colNames = new String[numColumns]; // replace with dbhandler to get colnames
                         for (int i = 1; i <= numColumns; i++) colNames[i-1] = currentRelationInfo.getColumnName(i);
                         JPanel optionFields = new JPanel();
-                        optionFields.setLayout(new GridLayout(numColumns, 2));
+                        optionFields.setLayout(new GridLayout(numColumns, 1));
 
                         /// code to dynamically make text fields
                         for (int i = 0; i < numColumns; i++) {
                             JLabel label = new JLabel(colNames[i]);
                             JTextField field = new JTextField();
+                            field.setPreferredSize(new Dimension(40,12));
                             field.setName(currentRelationInfo.getColumnName(i+1));
                             optionFields.add(label);
                             optionFields.add(field);

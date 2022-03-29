@@ -23,7 +23,7 @@ public class UI extends JFrame implements ActionListener {
 
     public void showFrame(DBHandler dbHandler) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // setPreferredSize(new Dimension(1500, 1000));
+        setPreferredSize(new Dimension(1500, 1000));
         add(new TabbedPane(dbHandler), BorderLayout.CENTER);
         addWindowListener(new WindowListener() {
             @Override
